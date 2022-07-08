@@ -38,7 +38,7 @@ def iterateDirectory(directory):
         if p.is_file():
             # Upload
             checkFile(p)
-        elif p.is_dir() and not str(p).startswith("."):
+        elif p.is_dir() and not str(p.parts)[-1].startswith("."):
             # Change dir
             navigateToFolder(str(p).split('/')[-1])
             iterateDirectory(p)

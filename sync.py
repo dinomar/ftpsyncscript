@@ -30,12 +30,17 @@ def iterateSyncDirectories(folders):
         
         # Upload folder
         iterateDirectory(syncFolder["source"])
+        
+        # Navigate back to root
+        ftp.cwd("..")
+        for folder in splitDestPath(syncFolder["dest"]):
+            ftp.cwd("..")
 
 def iterateDirectory(directory):
     path = Path(directory)
 
     for p in path.iterdir():
-        if p.is_file():
+        if p.is_file() and not p.parts[-1].startswith("."):
             # Upload
             checkFile(p)
         elif p.is_dir() and not p.parts[-1].startswith("."):
@@ -53,6 +58,11 @@ def checkFile(p):
         parts = f.split()
         fName = parts[8]
         fSize = parts[4]
+        
+        # rebuild name with spaces
+        if len(parts) > 9:
+            for n in range(9, len(parts)):
+                fName += " " + parts[n]
         
         # Check file exists
         if fName == p.parts[-1] and int(fSize) == p.stat().st_size:

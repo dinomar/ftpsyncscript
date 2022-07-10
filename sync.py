@@ -38,23 +38,23 @@ def iterateSyncDirectories(folders):
 
 def iterateDirectory(directory):
     path = Path(directory)
-
+    
+    # Get remote directory list
+    remoteDirList = []
+    ftp.retrlines('LIST', remoteDirList.append)
+    
     for p in path.iterdir():
         if p.is_file() and not p.parts[-1].startswith("."):
             # Upload
-            checkFile(p)
+            checkFile(p, remoteDirList)
         elif p.is_dir() and not p.parts[-1].startswith("."):
             # Change dir
             navigateToFolder(str(p).split('/')[-1])
             iterateDirectory(p)
             ftp.cwd("..")
 
-def checkFile(p):
-    # Get directory list
-    dirList = []
-    ftp.retrlines('LIST', dirList.append)
-    
-    for f in dirList:
+def checkFile(p, remoteDirList):
+    for f in remoteDirList:
         parts = f.split()
         fName = parts[8]
         fSize = parts[4]

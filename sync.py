@@ -86,7 +86,7 @@ def renameFileWithRandomStr(p):
     newFilename = fParts[0] + "-" + randomString(10)
     for i in range(1, len(fParts)): # -1
         newFilename += "." + fParts[i]
-    return p.rename(newFilename)
+    return p.rename(p.parent + "/" + newFilename)
     
     
 def randomString(length):
